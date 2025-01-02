@@ -1,7 +1,7 @@
 import { useCallback, useRef } from "react"
 import { Texture } from "three"
 
-function ImageInput({ setTexture }) {
+function ImageInput({ setTexture, setInfo, setFileInfo }) {
   const inputRef = useRef()
   
   const handleClick = useCallback(() => {
@@ -12,6 +12,8 @@ function ImageInput({ setTexture }) {
   const handleChange = useCallback((e) => {
     e.preventDefault()
     const file = inputRef.current?.files[0]
+    
+    setFileInfo(file.type + " || " + file.name)
 
     if(file.type.split("/")[0] === "image") {
       const image = document.createElement("img");
@@ -28,9 +30,11 @@ function ImageInput({ setTexture }) {
   
       const newTexture = new Texture(image)
       newTexture.needsUpdate = true
-  
+      
+      setInfo("Image uploaded")
       setTexture(newTexture)
     } else {
+      setInfo("Error reading the file")
       console.log("Something went wrong reading the file")
     }
   }, [])
